@@ -1,0 +1,120 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+    user
+    admin
+}
+
+model GoogleUser {
+    id      String @id @default(uuid()) // Alterado de ObjectId para UUID
+    email   String @unique
+    name    String
+    picture String
+    role    Role   @default(user)
+
+    @@map("google_user") // Ajustado para seguir convenções de nomes em SQL
+}
+
+model HomePagePromotion {
+    id    String @id @default(uuid()) // Alterado de ObjectId para UUID
+    order Int
+
+    Profile   Profile @relation(fields: [profileId], references: [id])
+    profileId String  @unique
+
+    @@map("home_page_promotions")
+}
+
+model Address {
+    id           String  @id @default(uuid()) // UUID como identificador único
+    cep          String
+    city         String
+    complement   String?
+    lat          Float
+    lng          Float
+    neighborhood String
+    number       String
+    street       String
+    uf           String
+
+    Profile   Profile @relation(fields: [profileId], references: [id])
+    profileId String  @unique
+
+    @@map("addresses") // Nome da tabela ajustado para snake_case
+}
+
+model Picture {
+    id   String @id @default(uuid()) // UUID como identificador único
+    key  String
+    name String
+    size Int
+    url  String
+
+    Profile   Profile @relation(fields: [profileId], references: [id])
+    profileId String  @unique
+
+    @@map("pictures")
+}
+
+model Categorie {
+    id   String @id @default(uuid()) // Alterado de ObjectId para UUID
+    name String @unique
+
+    profile Profile[] @relation("Categories")
+
+    @@map("categories")
+}
+
+model Promotion {
+    id          String  @id @default(uuid()) // Alterado de ObjectId para UUID
+    title       String
+    description String?
+
+    Profile   Profile @relation(fields: [profileId], references: [id])
+    profileId String  @unique
+
+    @@map("promotions")
+}
+
+model Telephones {
+    id        String   @id @default(uuid()) // Alterado de ObjectId para UUID
+    telephone String[]
+    whatsapp  String[]
+
+    Profile   Profile @relation(fields: [profileId], references: [id])
+    profileId String  @unique
+
+    @@map("telephones")
+}
+
+enum categoryType {
+    restaurante
+    hotel
+}
+
+model Profile {
+    id           String   @id @default(uuid())
+    name         String
+    informations String?
+    movie        String?
+    resume       String?
+    createdAt    DateTime @default(now()) @db.Date
+
+    address             Address?
+    Picture             Picture?
+    Promotion           Promotion?
+    Telephones          Telephones?
+    categoryType        categoryType
+    categorie           Categorie[]        @relation("Categories")
+    Home_page_promotion HomePagePromotion?
+
+    @@map("profiles")
+}
