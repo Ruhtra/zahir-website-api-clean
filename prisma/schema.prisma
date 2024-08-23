@@ -14,11 +14,16 @@ enum Role {
 }
 
 model GoogleUser {
-    id      String @id @default(uuid()) // Alterado de ObjectId para UUID
-    email   String @unique
-    name    String
-    picture String
-    role    Role   @default(user)
+    id       String  @id @default(uuid()) // Alterado de ObjectId para UUID
+    email    String  @unique
+    name     String?
+    picture  String
+    googleId String  @unique
+
+    role Role @default(user)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@map("google_user") // Ajustado para seguir convenções de nomes em SQL
 }
