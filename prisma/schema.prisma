@@ -8,6 +8,15 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
+model Session {
+    id        String   @id @default(cuid())
+    sid       String   @unique
+    data      String
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
 enum Role {
     user
     admin
