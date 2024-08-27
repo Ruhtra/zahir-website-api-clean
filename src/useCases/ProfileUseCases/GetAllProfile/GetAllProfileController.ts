@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { MappingListAllProfileResponseDto } from "./GetAllProfileDto";
 import { IProfileRepository } from "../../../repositories/IProfileRepository";
+import { IController } from "../../IController";
 
-export class GetAllprofileController {
+export class GetAllprofileController implements IController {
   constructor(private profileRepository: IProfileRepository) {}
 
   async handle(request: Request, response: Response) {

@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { IHomePagePromotionRepository } from "../../../repositories/IHomePagePromotionRepository";
 import { MappingListHomePagePromotionResponseDto } from "./GetAllHomePagePromotionDto";
+import { IController } from "../../IController";
 
-export class GetAllHomePagePromotionController {
+export class GetAllHomePagePromotionController implements IController {
   constructor(
     private homePagePromotionRepository: IHomePagePromotionRepository
   ) {}

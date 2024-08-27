@@ -4,8 +4,9 @@ import {
   MappingProfileResponseDto,
 } from "./GetprofileDto";
 import { IProfileRepository } from "../../../repositories/IProfileRepository";
+import { IController } from "../../IController";
 
-export class GetProfileController {
+export class GetProfileController implements IController {
   constructor(private profileRepository: IProfileRepository) {}
 
   async handle(request: Request, response: Response) {
