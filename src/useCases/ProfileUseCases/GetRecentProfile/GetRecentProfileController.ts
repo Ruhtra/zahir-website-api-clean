@@ -1,17 +1,15 @@
 import { Request, Response } from "express";
-import { IProfilesRepository } from "../../../repositories/IProfilesRepository";
+import { IProfileRepository } from "../../../repositories/IProfileRepository";
 import { MappingListRecentProfileResponseDto } from "./GetRecentProfileDto";
 
 export class GetRecentProfileController {
-    constructor (
-        private profilesRepository: IProfilesRepository
-    ) {}
+  constructor(private profilesRepository: IProfileRepository) {}
 
-    async handle(request: Request, response: Response) {
-        const recents = await this.profilesRepository.recents()
-        
-        const recentsDto = MappingListRecentProfileResponseDto(recents)
+  async handle(request: Request, response: Response) {
+    const recents = await this.profilesRepository.recents();
 
-        return response.json(recentsDto)
-    }
+    const recentsDto = MappingListRecentProfileResponseDto(recents);
+
+    return response.json(recentsDto);
+  }
 }

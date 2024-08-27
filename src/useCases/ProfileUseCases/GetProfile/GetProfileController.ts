@@ -1,26 +1,27 @@
 import { Request, Response } from "express";
-import { ObjectId } from "mongodb";
-import { ProfileRepository } from "../../../repositories/implemetations/ProfileRepository";
-import { MappingProfileResponseDto } from "./GetprofileDto";
+import {
+  IGetProfileRequestDto,
+  MappingProfileResponseDto,
+} from "./GetprofileDto";
+import { IProfileRepository } from "../../../repositories/IProfileRepository";
 
 export class GetProfileController {
-    constructor (
-        private profileRepository : ProfileRepository
-    ) {}
+  constructor(private profileRepository: IProfileRepository) {}
 
-    async handle(request: Request, response: Response) {
-        try {
-            const id = request.query.id as string
-            if (!id)  throw new Error("Id parameter is Required")
-    
-            const profile = await this.profileRepository.findById(new ObjectId(id))
+  async handle(request: Request, response: Response) {
+    try {
+      const query: IGetProfileRequestDto =
+        request.query as unknown as IGetProfileRequestDto;
+      if (!query.id) return response.status(400).send("id in query is missing");
 
-            const profileDto = MappingProfileResponseDto(profile)
+      const profile = await this.profileRepository.findById(query.id);
+      if (!profile) return response.sendStatus(404);
 
-            return response.json(profileDto)
-        } catch (error) {
-            console.error(error);
-            return response.status(500).send("Erro ao procurar pelo profile")
-        }
+      const profileDto = MappingProfileResponseDto(profile);
+      return response.json(profileDto);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).send("Erro ao procurar pelo profile");
     }
+  }
 }

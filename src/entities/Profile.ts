@@ -1,24 +1,47 @@
-import { Address } from "./Address";
-import { Categorie } from "./Categorie";
-import { CategoryType } from "./CategorieType";
-import { Picture } from "./Picture";
-import { Promotion } from "./Promotion";
-import { Telephones } from "./Telephones";
+import { Category } from "./Category";
+import { CategoryGroup } from "./CategoryGroup";
+import { HomePagePromotion } from "./HomePagePromotion";
 
 export type ProfileProps = {
-  id: String;
-  name: String;
-  informations?: String;
-  movie?: String;
-  resume?: String;
-  categoryType: CategoryType;
+  id: string;
+  name: string;
+  informations?: string;
+  movie?: string;
+  resume?: string;
   readonly createdAt: Date;
 
-  readonly categorie: Categorie[];
-  readonly promotion?: Promotion;
-  readonly picture?: Picture;
-  readonly telephones?: Telephones;
-  readonly address?: Address;
+  address?: {
+    id: string;
+    cep: string;
+    city: string;
+    complement?: string;
+    lat: number;
+    lng: number;
+    neighborhood: string;
+    number: string;
+    street: string;
+    uf: string;
+  };
+  picture?: {
+    id: string;
+    key: string;
+    name: string;
+    size: Number;
+    url: string;
+  };
+  promotion?: {
+    id: string;
+    title: string;
+    description?: string;
+  };
+  telephone?: {
+    id: string;
+    telephone: string[];
+    whatsapp: string[];
+  };
+  readonly categoryGroup?: CategoryGroup[];
+  readonly category?: Category[];
+  readonly homePagePromotion?: HomePagePromotion;
 };
 
 export class Profile {
@@ -45,5 +68,27 @@ export class Profile {
   }
   public get createdAt() {
     return this.props.createdAt;
+  }
+
+  public get address() {
+    return this.props.address;
+  }
+  public get picture() {
+    return this.props.picture;
+  }
+  public get promotion() {
+    return this.props.promotion;
+  }
+  public get telephone() {
+    return this.props.telephone;
+  }
+  public get categoryGroup() {
+    return this.props.categoryGroup;
+  }
+  public get category() {
+    return this.props.category;
+  }
+  public get homePagePromotion() {
+    return this.props.homePagePromotion;
   }
 }

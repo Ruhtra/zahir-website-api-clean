@@ -1,10 +1,8 @@
-import { ProfileRepository } from "../../../repositories/implemetations/ProfileRepository";
+import { ProfileRepositoryPrisma } from "../../../repositories/implementations/ProfileRepositoryPrisma";
 import { GetProfileController } from "./GetProfileController";
 
-const profileRepository = new ProfileRepository()
+const profileRepositoryPrisma = new ProfileRepositoryPrisma();
 
-const getProfileController = new GetProfileController(profileRepository)
+const getProfileController = new GetProfileController(profileRepositoryPrisma);
 
-export {
-    getProfileController
-}
+export { getProfileController };

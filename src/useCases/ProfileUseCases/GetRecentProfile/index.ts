@@ -1,10 +1,10 @@
-import { ProfileRepository } from "../../../repositories/implemetations/ProfileRepository";
+import { ProfileRepositoryPrisma } from "../../../repositories/implementations/ProfileRepositoryPrisma";
 import { GetRecentProfileController } from "./GetRecentProfileController";
 
-const profileRepository = new ProfileRepository()
+const profileRepositoryPrisma = new ProfileRepositoryPrisma();
 
-const getRecentProfileController = new GetRecentProfileController(profileRepository)
+const getRecentProfileController = new GetRecentProfileController(
+  profileRepositoryPrisma
+);
 
-export {
-    getRecentProfileController
-}
+export { getRecentProfileController };

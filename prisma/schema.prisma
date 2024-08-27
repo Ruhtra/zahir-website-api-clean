@@ -9,46 +9,46 @@ datasource db {
 }
 
 model Session {
-    id        String   @id @default(cuid())
-    sid       String   @unique
-    data      String
-    expiresAt DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  sid          String   @unique
+  data         String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-enum Role {
-    user
-    admin
-}
+// enum Role {
+//     user
+//     admin
+// }
 
 model GoogleUser {
-    id       String  @id @default(uuid()) // Alterado de ObjectId para UUID
-    email    String  @unique
-    name     String?
-    picture  String
+    id      String  @id @default(uuid())
+    email   String  @unique
+    name    String?
+    picture String
     googleId String  @unique
 
-    role Role @default(user)
+    // role Role @default(user)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@map("google_user") // Ajustado para seguir convenções de nomes em SQL
+    @@map("google_user")
 }
 
 model HomePagePromotion {
-    id    String @id @default(uuid()) // Alterado de ObjectId para UUID
+    id    String @id @default(uuid())
     order Int
 
-    Profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
 
-    @@map("home_page_promotions")
+    @@map("home_page_promotion")
 }
 
 model Address {
-    id           String  @id @default(uuid()) // UUID como identificador único
+    id           String  @id @default(uuid())
     cep          String
     city         String
     complement   String?
@@ -59,59 +59,63 @@ model Address {
     street       String
     uf           String
 
-    Profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
 
-    @@map("addresses") // Nome da tabela ajustado para snake_case
+    @@map("address")
 }
 
 model Picture {
-    id   String @id @default(uuid()) // UUID como identificador único
+    id   String @id @default(uuid())
     key  String
     name String
     size Int
     url  String
 
-    Profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
 
-    @@map("pictures")
+    @@map("picture")
 }
 
-model Categorie {
-    id   String @id @default(uuid()) // Alterado de ObjectId para UUID
+model Category {
+    id   String @id @default(uuid())
     name String @unique
 
-    profile Profile[] @relation("Categories")
+    profile Profile[] @relation("Category")
 
-    @@map("categories")
+    @@map("category")
+}
+
+model CategoryGroup {
+    id   String @id @default(uuid())
+    name String @unique
+
+    profile Profile[] @relation("CategoryGroup")
+
+    @@map("category_group")
 }
 
 model Promotion {
-    id          String  @id @default(uuid()) // Alterado de ObjectId para UUID
+    id          String  @id @default(uuid())
     title       String
     description String?
 
-    Profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
 
-    @@map("promotions")
+    @@map("promotion")
 }
 
-model Telephones {
-    id        String   @id @default(uuid()) // Alterado de ObjectId para UUID
+model Telephone {
+    id        String   @id @default(uuid())
     telephone String[]
     whatsapp  String[]
 
-    Profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
 
-    @@map("telephones")
-}
-
-enum categoryType {
-    restaurante
-    hotel
+    @@map("telephone")
 }
 
 model Profile {
@@ -122,13 +126,13 @@ model Profile {
     resume       String?
     createdAt    DateTime @default(now()) @db.Date
 
-    address             Address?
-    Picture             Picture?
-    Promotion           Promotion?
-    Telephones          Telephones?
-    categoryType        categoryType
-    categorie           Categorie[]        @relation("Categories")
-    Home_page_promotion HomePagePromotion?
+    address            Address?
+    picture            Picture?
+    promotion          Promotion?
+    telephone          Telephone?
+    categoryGroup      CategoryGroup[]    @relation("CategoryGroup")
+    category           Category[]         @relation("Category")
+    homePagePromotion  HomePagePromotion?
 
-    @@map("profiles")
+    @@map("profile")
 }
