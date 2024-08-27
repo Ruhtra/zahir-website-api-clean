@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import { ensureAuthenticated } from "./authMiddleware";
 
 const router = express.Router();
 
@@ -25,6 +26,15 @@ router.post("/logout", (req, res) => {
     });
   } else {
     res.status(401).json({ message: "Not authenticated" });
+  }
+});
+
+router.get("/me", ensureAuthenticated, (req, res) => {
+  try {
+    if (!req.user) throw new Error("User not founded");
+    return res.json(req.user);
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 

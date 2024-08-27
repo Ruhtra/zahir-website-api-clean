@@ -4,7 +4,7 @@ export interface IGetGoogleUserRequestDto {
   id: string;
 }
 
-export interface IGetGoogleUserponseDto {
+export interface IGetGoogleUseRespondeDto {
   id: string;
   email: string;
   name?: string;
@@ -13,7 +13,7 @@ export interface IGetGoogleUserponseDto {
 }
 export function MappingGetGoogleUserResponseDto(
   googleUser: GoogleUser
-): IGetGoogleUserponseDto {
+): IGetGoogleUseRespondeDto {
   return {
     id: googleUser.id,
     email: googleUser.email,

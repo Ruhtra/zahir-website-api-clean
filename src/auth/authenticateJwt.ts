@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+//TODO: remove user from jwt token and get only id
 export const authenticateJWT = (
   req: Request,
   res: Response,
@@ -10,9 +11,7 @@ export const authenticateJWT = (
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
+      if (err) return res.sendStatus(403);
 
       req.user = user;
       next();

@@ -6,7 +6,7 @@ import {
   MappingGetGoogleUserResponseDto,
 } from "./GetGoogleUserDto";
 
-export class GetAllCategoryController implements IController {
+export class GetGoogleUserController implements IController {
   constructor(private googleUserRepository: IGoogleUserRepository) {}
 
   async handle(request: Request, response: Response) {
