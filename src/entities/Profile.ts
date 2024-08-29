@@ -26,7 +26,7 @@ export type ProfileProps = {
     id: string;
     key: string;
     name: string;
-    size: Number;
+    size: number;
     url: string;
   };
   promotion?: {
@@ -44,11 +44,87 @@ export type ProfileProps = {
   readonly homePagePromotion?: HomePagePromotion;
 };
 
+export type ProfileCreateProps = Omit<
+  ProfileProps,
+  | "id"
+  | "createdAt"
+  | "address"
+  | "picture"
+  | "promotion"
+  | "telephone"
+  | "category"
+  | "categoryGroup"
+> & {
+  address?: Omit<ProfileProps["address"], "id">;
+  picture?: Omit<ProfileProps["picture"], "id">;
+  promotion?: Omit<ProfileProps["promotion"], "id">;
+  telephone?: Omit<ProfileProps["telephone"], "id">;
+  category?: { name: string }[];
+  categoryGroup?: { name: string }[];
+};
+
+//TODO - HOMEPROMOTION
+
 export class Profile {
   private constructor(private props: ProfileProps) {}
 
   public static with(props: ProfileProps) {
     return new Profile(props);
+  }
+  public static create(props: ProfileCreateProps) {
+    return new Profile({
+      id: undefined,
+      createdAt: new Date(),
+      name: props.name,
+      ...(props.address && {
+        address: {
+          id: undefined,
+          cep: props.address.cep,
+          city: props.address.city,
+          lat: props.address.lat,
+          lng: props.address.lng,
+          neighborhood: props.address.neighborhood,
+          number: props.address.number,
+          street: props.address.street,
+          uf: props.address.uf,
+          complement: props.address.complement,
+        },
+      }),
+      ...(props.picture && {
+        picture: {
+          id: undefined,
+          key: props.picture.key,
+          name: props.picture.name,
+          size: props.picture.size,
+          url: props.picture.url,
+        },
+      }),
+      ...(props.promotion && {
+        promotion: {
+          id: undefined,
+          title: props.promotion.title,
+          description: props.promotion.description,
+        },
+      }),
+      ...(props.telephone && {
+        telephone: {
+          id: undefined,
+          telephone: props.telephone.telephone,
+          whatsapp: props.telephone.whatsapp,
+        },
+      }),
+      category: props.category.map((c) => {
+        return Category.with({
+          name: c.name,
+        });
+      }),
+      categoryGroup: props.categoryGroup.map((c) => {
+        return CategoryGroup.with({
+          name: c.name,
+        });
+      }),
+      homePagePromotion: props.homePagePromotion,
+    });
   }
 
   public get id() {

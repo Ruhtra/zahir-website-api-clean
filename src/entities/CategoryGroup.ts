@@ -10,8 +10,12 @@ export type CategoryGroupProps = {
 export class CategoryGroup {
   private constructor(private props: CategoryGroupProps) {}
 
-  public static with(props: CategoryGroupProps) {
-    return new CategoryGroup(props);
+  public static with(props: Omit<CategoryGroupProps, "id">) {
+    return new CategoryGroup({
+      id: undefined,
+      name: props.name,
+      profile: props.profile,
+    });
   }
 
   public get id() {

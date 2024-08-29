@@ -69,7 +69,6 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         ? null
         : profile.categoryGroup.map((cp) => {
             return CategoryGroup.with({
-              id: cp.id,
               name: cp.name,
             });
           }),
@@ -77,7 +76,6 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         ? null
         : profile.category.map((c) => {
             return Category.with({
-              id: c.id,
               name: c.name,
             });
           }),
@@ -144,7 +142,6 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           ? null
           : p.categoryGroup.map((cp) => {
               return CategoryGroup.with({
-                id: cp.id,
                 name: cp.name,
               });
             }),
@@ -152,7 +149,6 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           ? null
           : p.category.map((c) => {
               return Category.with({
-                id: c.id,
                 name: c.name,
               });
             }),
@@ -179,6 +175,82 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         movie: r.movie,
         createdAt: r.createdAt,
       });
+    });
+  }
+  async save(profile: Profile): Promise<void> {
+    await prismaClient.profile.create({
+      data: {
+        name: profile.name,
+        informations: profile.informations,
+        movie: profile.movie,
+        resume: profile.resume,
+        createdAt: profile.createdAt,
+        ...(profile.address && {
+          address: {
+            create: {
+              cep: profile.address.cep,
+              city: profile.address.city,
+              complement: profile.address.complement,
+              lat: profile.address.lat,
+              lng: profile.address.lng,
+              neighborhood: profile.address.neighborhood,
+              number: profile.address.number,
+              street: profile.address.street,
+              uf: profile.address.uf,
+            },
+          },
+        }),
+        ...(profile.picture && {
+          picture: {
+            create: {
+              key: profile.picture.key,
+              name: profile.picture.name,
+              size: profile.picture.size,
+              url: profile.picture.url,
+            },
+          },
+        }),
+        ...(profile.promotion && {
+          promotion: {
+            create: {
+              title: profile.promotion.title,
+              description: profile.promotion.description,
+            },
+          },
+        }),
+        ...(profile.telephone && {
+          telephone: {
+            create: {
+              telephone: profile.telephone.telephone,
+              whatsapp: profile.telephone.whatsapp,
+            },
+          },
+        }),
+        categoryGroup: {
+          connectOrCreate: profile.categoryGroup.map((cg) => {
+            return {
+              where: {
+                name: cg.name,
+              },
+              create: {
+                name: cg.name,
+              },
+            };
+          }),
+        },
+        category: {
+          connectOrCreate: profile.category.map((c) => {
+            return {
+              where: {
+                name: c.name,
+              },
+              create: {
+                name: c.name,
+              },
+            };
+          }),
+        },
+      },
     });
   }
 }

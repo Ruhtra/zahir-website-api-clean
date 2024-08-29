@@ -6,7 +6,7 @@ export interface IProfileRepository {
 
   recents: () => Promise<Profile[]>;
 
-  // save: (profile: Profile) => Promise<void>
+  save: (profile: Profile) => Promise<void>;
   // update: (id: ObjectId, Profile: Profile) => Promise<void>
   // delete: (id: ObjectId) => Promise<void>
 }
