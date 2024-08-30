@@ -11,15 +11,15 @@ export class BucketSupabaseProvider implements IBuketProvider {
   async upload(fileKey: string, file: Express.Multer.File): Promise<any> {
     const { data, error } = await supabase.storage
       .from(bucket)
-      .upload("public/" + fileKey, file.buffer, {
+      .upload(fileKey, file.buffer, {
         cacheControl: "3600",
-        upsert: false,
+        upsert: true,
         contentType: file.mimetype,
       });
 
     if (error) throw new Error("Error in upload file");
     return {
-      url: `https://${project_id}.supabase.co/storage/v1/object/public/${bucket}/public/${fileKey}`,
+      url: `https://${project_id}.supabase.co/storage/v1/object/public/${data.fullPath}`,
     };
   }
   async delete(fileKey: string): Promise<any> {

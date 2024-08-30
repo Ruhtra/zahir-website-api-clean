@@ -68,7 +68,7 @@ model Address {
 model Picture {
     id   String @id @default(uuid())
     key  String
-    name String
+    path String
     size Int
     url  String
 

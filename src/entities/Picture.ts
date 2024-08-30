@@ -3,7 +3,7 @@ import { Profile } from "./Profile";
 export type PictureProps = {
   id: string;
   key: string;
-  name: string;
+  path: string;
   size: number;
   url: string;
 
@@ -24,7 +24,7 @@ export class Picture {
     return new Picture({
       id: undefined,
       key: props.key,
-      name: props.name,
+      path: props.path,
       size: props.size,
       url: props.url,
       profileID: props.profileID,
@@ -37,8 +37,8 @@ export class Picture {
   public get key() {
     return this.props.key;
   }
-  public get name() {
-    return this.props.name;
+  public get path() {
+    return this.props.path;
   }
   public get size() {
     return this.props.size;

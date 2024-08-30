@@ -49,7 +49,7 @@ export class HomePagePromotionRepositoryPrisma
             : {
                 id: hpp.profile.picture.id,
                 key: hpp.profile.picture.key,
-                name: hpp.profile.picture.name,
+                path: hpp.profile.picture.name,
                 size: hpp.profile.picture.size,
                 url: hpp.profile.picture.url,
               },

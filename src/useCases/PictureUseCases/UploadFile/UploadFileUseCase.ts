@@ -1,7 +1,5 @@
 import { IUseCase } from "../../IUseCase";
 import { UploadFileRequestDto, UploadFileResponseDto } from "./UploadFileDto";
-import { randomUUID } from "crypto";
-import { prismaClient } from "../../../prismaClient";
 import { IBuketProvider } from "../../../providers/IBucketProvider";
 import path from "path";
 import { IPictureRepository } from "../../../repositories/IPictureRepository";
@@ -22,17 +20,18 @@ export class UploadFileUseCase
     name,
   }: UploadFileRequestDto): Promise<UploadFileResponseDto> {
     const fileExtension = path.extname(file.originalname);
-    const fileKey = randomUUID().concat("-").concat(name).concat(fileExtension);
+    const fileKey = idProfile.concat(fileExtension);
+    const pathKey = path.join(fileExtension, fileKey);
 
     const { url } = await this.bucketProvider.upload(
-      fileKey,
+      pathKey,
       file as Express.Multer.File
     );
 
     try {
       const picture = Picture.create({
         key: fileKey,
-        name: name,
+        path: pathKey,
         size: file.size,
         url: url,
         profileID: idProfile,

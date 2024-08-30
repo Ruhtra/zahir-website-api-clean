@@ -7,7 +7,7 @@ export class PictureRespositoryPrisma implements IPictureRepository {
     await prismaClient.picture.upsert({
       create: {
         key: picture.key,
-        name: picture.name,
+        name: picture.path,
         url: picture.url,
         size: picture.size,
         profile: {
@@ -18,7 +18,7 @@ export class PictureRespositoryPrisma implements IPictureRepository {
       },
       update: {
         key: picture.key,
-        name: picture.name,
+        name: picture.path,
         url: picture.url,
         size: picture.size,
       },
