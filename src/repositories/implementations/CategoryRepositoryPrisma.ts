@@ -8,7 +8,7 @@ export class CategoryRepositoryPrisma implements ICategoryRepository {
 
     return categories.map((c) => {
       return Category.with({
-        id: c.id,
+        // id: c.id,
         name: c.name,
       });
     });

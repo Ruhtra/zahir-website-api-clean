@@ -1,12 +1,10 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { IBuketProvider } from "../IBucketProvider";
+import { env } from "../../env";
 
-const project_id = process.env.SUPABASE_PROJECT_ID;
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-const bucket = process.env.SUPABASE_BUCKET;
+const project_id = env.SUPABASE_PROJECT_ID;
+const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+const bucket = env.SUPABASE_BUCKET;
 
 //TO-DO: TRATAMENDO DE ERRO FEITO CORRETAMETNE
 export class BucketSupabaseProvider implements IBuketProvider {

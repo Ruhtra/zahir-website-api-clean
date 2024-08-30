@@ -66,11 +66,11 @@ model Address {
 }
 
 model Picture {
-    id          String @id @default(uuid())
-    key         String
-    name        String
-    size    Int
-    url         String
+    id   String @id @default(uuid())
+    key  String
+    name String
+    size Int
+    url  String
 
     profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
@@ -130,7 +130,7 @@ model Profile {
     createdAt    DateTime @default(now()) @db.Date
 
     address           Address?
-    picture           Picture? 
+    picture           Picture?
     promotion         Promotion?
     telephone         Telephone?
     categoryGroup     CategoryGroup[]    @relation("CategoryGroup")

@@ -1,35 +1,26 @@
-import dotenv from "dotenv";
-const envFile =
-  process.env.NODE_ENV === "production" ? ".env.production" : ".env";
-dotenv.config({ path: envFile });
-
 import http from "http";
 import https from "https";
 
 import { app } from "./app";
 import path from "path";
 import fs from "fs";
-import { options } from "axios";
+import { env } from "./env";
 
 async function initModules() {
   console.log(" ~. Starting modules...");
 
-  if (process.env.NODE_ENV != "production") {
+  if (env.MODE == "DEVELOPMENT") {
     const options = {
       key: fs.readFileSync(path.join(__dirname, "..", "keys", "key.pem")),
       cert: fs.readFileSync(path.join(__dirname, "..", "keys", "cert.pem")),
     };
 
-    https.createServer(options, app).listen(process.env.PORT, () => {
-      console.log(
-        " >. Server running in: https://localhost:" + process.env.PORT
-      );
+    https.createServer(options, app).listen(env.PORT, () => {
+      console.log(" >. Server running in: https://localhost:" + env.PORT);
     });
   } else {
-    http.createServer(app).listen(process.env.PORT, () => {
-      console.log(
-        " >. Server running in: http://localhost:" + process.env.PORT
-      );
+    http.createServer(app).listen(env.PORT, () => {
+      console.log(" >. Server running in: http://localhost:" + env.PORT);
     });
   }
 }

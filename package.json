@@ -24,9 +24,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node ./dist/server.js",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/server.ts",
-    "start:prod": "cross-env NODE_ENV=production ts-node src/server.ts"
+    "start": "node --env-file=.env ./dist/server.js",
+    "dev": "tsx watch --env-file=.env src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +40,7 @@
     "@types/passport-google-oauth2": "^0.1.9",
     "cross-env": "^7.0.3",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.4.5"
   }
 }

@@ -5,18 +5,19 @@ import passport from "passport";
 import { PrismaSessionStore } from "./prismaSession";
 import { passportConfig } from "./passport";
 import { router as authRoutes } from "../auth/authRoute";
+import { env } from "../env";
 
 const Session = (app: Application) => {
   app.set("trust proxy", 1); // trust first proxy
   app.use(
     session({
-      secret: process.env.SECRET,
+      secret: env.SECRET,
       resave: false,
       saveUninitialized: true,
       store: new PrismaSessionStore(),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 1 day
-        domain: process.env.DOMAIN,
+        domain: env.DOMAIN,
         httpOnly: true,
         path: "/",
         secure: true,

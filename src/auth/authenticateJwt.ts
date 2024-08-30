@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { env } from "../env";
 
 //TODO: remove user from jwt token and get only id
 export const authenticateJWT = (
@@ -10,7 +11,7 @@ export const authenticateJWT = (
   const token = req.session.passport?.user.token;
 
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(token, env.JWT_SECRET, (err, user) => {
       if (err) return res.sendStatus(403);
 
       req.user = user;

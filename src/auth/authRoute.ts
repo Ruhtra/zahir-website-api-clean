@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { ensureAuthenticated } from "./authMiddleware";
+import { env } from "../env";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect(`${process.env.URL_FRONTEND}/login/success`);
+    res.redirect(`${env.URL_FRONTEND}/login/success`);
   }
 );
 

@@ -5,6 +5,7 @@ import {
 import jwt from "jsonwebtoken";
 import { PassportStatic, Profile as PassportProfile } from "passport";
 import { prismaClient } from "../prismaClient";
+import { env } from "../env";
 
 interface GoogleUser {
   id: string;
@@ -28,9 +29,9 @@ export const passportConfig = (passport: PassportStatic) => {
   passport.use(
     new GoogleStrategy(
       {
-        clientID: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        callbackURL: process.env.GOOGLE_REDIRECT_URL!,
+        clientID: env.GOOGLE_CLIENT_ID!,
+        clientSecret: env.GOOGLE_CLIENT_SECRET!,
+        callbackURL: env.GOOGLE_REDIRECT_URL!,
       },
       async (
         accessToken: string,
@@ -54,7 +55,7 @@ export const passportConfig = (passport: PassportStatic) => {
             });
           }
 
-          const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+          const token = jwt.sign({ id: user.id }, env.JWT_SECRET!, {
             expiresIn: "1h",
           });
 
