@@ -18,5 +18,5 @@ export const UploadFileRequestDtoScheme = z.object({
 export type UploadFileRequestDto = z.infer<typeof UploadFileRequestDtoScheme>;
 
 export interface UploadFileResponseDto {
-  id: string;
+  url: string;
 }

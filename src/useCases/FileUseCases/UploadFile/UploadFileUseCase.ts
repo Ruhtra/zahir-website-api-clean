@@ -4,11 +4,17 @@ import { randomUUID } from "crypto";
 import { prismaClient } from "../../../prismaClient";
 import { IBuketProvider } from "../../../providers/IBucketProvider";
 import path from "path";
+import { IPictureRepository } from "../../../repositories/IPictureRepository";
+import { Picture } from "../../../entities/Picture";
 
+//TO-DO: Fazer upsert no bucket pois no upsert do prisma não apaga a imagme anterior
 export class UploadFileUseCase
   implements IUseCase<UploadFileRequestDto, UploadFileResponseDto>
 {
-  constructor(private bucketProvider: IBuketProvider) {}
+  constructor(
+    private bucketProvider: IBuketProvider,
+    private pictureRepository: IPictureRepository
+  ) {}
 
   async execute({
     file,
@@ -24,29 +30,17 @@ export class UploadFileUseCase
     );
 
     try {
-      const picture = await prismaClient.picture.upsert({
-        where: {
-          profileId: idProfile,
-        },
-        update: {
-          name: name,
-          key: fileKey,
-          url: url,
-          size: file.size,
-        },
-        create: {
-          name: file.originalname,
-          key: fileKey,
-          url: url,
-          size: file.size,
-          profile: {
-            connect: {
-              id: idProfile,
-            },
-          },
-        },
+      const picture = Picture.create({
+        key: fileKey,
+        name: name,
+        size: file.size,
+        url: url,
+        profileID: idProfile,
       });
-      return { id: picture.id };
+
+      await this.pictureRepository.upsert(picture);
+
+      return { url: url };
     } catch (error) {
       await this.bucketProvider.delete(fileKey);
       throw error;

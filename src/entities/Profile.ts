@@ -1,6 +1,7 @@
 import { Category } from "./Category";
 import { CategoryGroup } from "./CategoryGroup";
 import { HomePagePromotion } from "./HomePagePromotion";
+import { Picture } from "./Picture";
 
 export type ProfileProps = {
   id: string;
@@ -22,13 +23,7 @@ export type ProfileProps = {
     street: string;
     uf: string;
   };
-  picture?: {
-    id: string;
-    key: string;
-    name: string;
-    size: number;
-    url: string;
-  };
+  picture?: Picture;
   promotion?: {
     id: string;
     title: string;
@@ -56,7 +51,7 @@ export type ProfileCreateProps = Omit<
   | "categoryGroup"
 > & {
   address?: Omit<ProfileProps["address"], "id">;
-  picture?: Omit<ProfileProps["picture"], "id">;
+  // picture?: Omit<Picture, "id">;
   promotion?: Omit<ProfileProps["promotion"], "id">;
   telephone?: Omit<ProfileProps["telephone"], "id">;
   category?: { name: string }[];
@@ -90,15 +85,16 @@ export class Profile {
           complement: props.address.complement,
         },
       }),
-      ...(props.picture && {
-        picture: {
-          id: undefined,
-          key: props.picture.key,
-          name: props.picture.name,
-          size: props.picture.size,
-          url: props.picture.url,
-        },
-      }),
+      // ...(props.picture && {
+      //   picture: {
+      //     id: undefined,
+      //     key: props.picture.key,
+      //     name: props.picture.name,
+      //     size: props.picture.size,
+      //     url: props.picture.url,
+      //   },
+      // }),
+
       ...(props.promotion && {
         promotion: {
           id: undefined,
@@ -113,16 +109,20 @@ export class Profile {
           whatsapp: props.telephone.whatsapp,
         },
       }),
-      category: props.category.map((c) => {
-        return Category.with({
-          name: c.name,
-        });
-      }),
-      categoryGroup: props.categoryGroup.map((c) => {
-        return CategoryGroup.with({
-          name: c.name,
-        });
-      }),
+      ...{
+        category: props.category.map((c) => {
+          return Category.with({
+            name: c.name,
+          });
+        }),
+      },
+      ...{
+        categoryGroup: props.categoryGroup.map((c) => {
+          return CategoryGroup.with({
+            name: c.name,
+          });
+        }),
+      },
       homePagePromotion: props.homePagePromotion,
     });
   }

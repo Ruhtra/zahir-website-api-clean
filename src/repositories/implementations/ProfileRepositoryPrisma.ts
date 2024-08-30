@@ -1,5 +1,6 @@
 import { Category } from "../../entities/Category";
 import { CategoryGroup } from "../../entities/CategoryGroup";
+import { Picture } from "../../entities/Picture";
 import { Profile } from "../../entities/Profile";
 import { prismaClient } from "../../prismaClient";
 import { IProfileRepository } from "../IProfileRepository";
@@ -44,13 +45,13 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           },
       picture: !profile.picture
         ? null
-        : {
+        : Picture.with({
             id: profile.picture.id,
             key: profile.picture.key,
             name: profile.picture.name,
             size: profile.picture.size,
             url: profile.picture.url,
-          },
+          }),
       promotion: !profile.promotion
         ? null
         : {
@@ -117,13 +118,13 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
             },
         picture: !p.picture
           ? null
-          : {
+          : Picture.with({
               id: p.picture.id,
               key: p.picture.key,
               name: p.picture.name,
               size: p.picture.size,
               url: p.picture.url,
-            },
+            }),
         promotion: !p.promotion
           ? null
           : {
