@@ -10,6 +10,9 @@ export class CreateProfileUseCase
   async execute(request: CreateProfileRequestDto): Promise<void> {
     const profile = Profile.create({
       name: request.name,
+      movie: request.movie,
+      resume: request.resume,
+      informations: request.informations,
       ...(request.address && {
         address: {
           cep: request.address.cep,
@@ -43,18 +46,19 @@ export class CreateProfileUseCase
           whatsapp: request.telephone.whatsapp,
         },
       }),
-      movie: request.movie,
-      resume: request.resume,
-      informations: request.informations,
-      category: request.category.map((c) => {
-        return {
-          name: c.name,
-        };
+      ...(request.category && {
+        category: request.category.map((name) => {
+          return {
+            name: name,
+          };
+        }),
       }),
-      categoryGroup: request.categoryGroup.map((c) => {
-        return {
-          name: c.name,
-        };
+      ...(request.categoryGroup && {
+        categoryGroup: request.categoryGroup.map((name) => {
+          return {
+            name: name,
+          };
+        }),
       }),
     });
 

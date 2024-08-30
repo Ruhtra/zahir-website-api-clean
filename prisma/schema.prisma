@@ -9,12 +9,12 @@ datasource db {
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sid          String   @unique
-  data         String
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+    id        String   @id @default(cuid())
+    sid       String   @unique
+    data      String
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 // enum Role {
@@ -23,10 +23,10 @@ model Session {
 // }
 
 model GoogleUser {
-    id      String  @id @default(uuid())
-    email   String  @unique
-    name    String?
-    picture String
+    id       String  @id @default(uuid())
+    email    String  @unique
+    name     String?
+    picture  String
     googleId String  @unique
 
     // role Role @default(user)
@@ -66,14 +66,17 @@ model Address {
 }
 
 model Picture {
-    id   String @id @default(uuid())
-    key  String
-    name String
-    size Int
-    url  String
+    id          String @id @default(uuid())
+    key         String
+    name        String
+    size    Int
+    url         String
 
     profile   Profile @relation(fields: [profileId], references: [id])
     profileId String  @unique
+
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt
 
     @@map("picture")
 }
@@ -126,13 +129,13 @@ model Profile {
     resume       String?
     createdAt    DateTime @default(now()) @db.Date
 
-    address            Address?
-    picture            Picture?
-    promotion          Promotion?
-    telephone          Telephone?
-    categoryGroup      CategoryGroup[]    @relation("CategoryGroup")
-    category           Category[]         @relation("Category")
-    homePagePromotion  HomePagePromotion?
+    address           Address?
+    picture           Picture? 
+    promotion         Promotion?
+    telephone         Telephone?
+    categoryGroup     CategoryGroup[]    @relation("CategoryGroup")
+    category          Category[]         @relation("Category")
+    homePagePromotion HomePagePromotion?
 
     @@map("profile")
 }

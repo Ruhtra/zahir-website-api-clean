@@ -1,73 +1,56 @@
 import { z } from "zod";
 
-export const CreateProfileRequestDtoSchema = z
+export const CreateProfileRequestDtoScheme = z
   .object({
-    name: z.string(),
-    informations: z.string().optional(),
-    movie: z.string().url().optional(),
-    resume: z.string().optional(),
+    name: z.string().max(500),
+    informations: z.string().max(500).optional(),
+    movie: z.string().url().max(150).optional(),
+    resume: z.string().max(500).optional(),
     address: z
       .object({
-        cep: z.string().length(8, "CEP deve conter exatamente 8 caracteres"),
-        city: z.string(),
-        complement: z.string().optional(),
+        cep: z
+          .string()
+          .length(8)
+          .regex(/^\d{8}$/),
+        city: z.string().max(150),
+        complement: z.string().max(150).optional(),
         lat: z.number(),
         lng: z.number(),
-        neighborhood: z.string(),
-        number: z.string(),
-        street: z.string(),
-        uf: z
-          .string()
-          .length(2, "UF deve conter exatamente 2 caracteres")
-          .regex(/^[A-Za-z]{2}$/, "UF deve conter apenas letras"),
+        neighborhood: z.string().max(150),
+        number: z.string().max(150),
+        street: z.string().max(150),
+        uf: z.string().length(2),
       })
       .strict()
       .optional(),
     picture: z
       .object({
-        key: z.string(),
-        name: z.string(),
+        key: z.string().max(500),
+        name: z.string().max(500),
         size: z.number(),
-        url: z.string().url(),
+        url: z.string().max(500).url(),
       })
       .strict()
       .optional(),
     promotion: z
       .object({
-        title: z.string(),
-        description: z.string().optional(),
+        title: z.string().max(150),
+        description: z.string().max(500).optional(),
       })
       .strict()
       .optional(),
     telephone: z
       .object({
-        telephone: z.array(
-          z.string().length(13, "Telefone deve conter exatamente 13 caracteres")
-        ),
-
-        whatsapp: z.array(
-          z.string().length(13, "WhatsApp deve conter exatamente 13 caracteres")
-        ),
+        telephone: z.array(z.string().length(11)),
+        whatsapp: z.array(z.string().length(11)),
       })
       .strict()
       .optional(),
-    categoryGroup: z.array(
-      z
-        .object({
-          name: z.string(),
-        })
-        .strict()
-    ),
-    category: z.array(
-      z
-        .object({
-          name: z.string(),
-        })
-        .strict()
-    ),
+    categoryGroup: z.array(z.string()),
+    category: z.array(z.string()),
   })
   .strict();
 
 export type CreateProfileRequestDto = z.infer<
-  typeof CreateProfileRequestDtoSchema
+  typeof CreateProfileRequestDtoScheme
 >;

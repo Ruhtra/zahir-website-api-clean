@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IController } from "../../IController";
 import {
   CreateProfileRequestDto,
-  CreateProfileRequestDtoSchema,
+  CreateProfileRequestDtoScheme,
 } from "./CreateProfileDto";
 import { CreateProfileUseCase } from "./CreateProfileUseCase";
 import { ZodError } from "zod";
@@ -12,7 +12,7 @@ export class CreateProfileController implements IController {
   async handle(request: Request, response: Response): Promise<any> {
     try {
       const profileDto: CreateProfileRequestDto =
-        CreateProfileRequestDtoSchema.parse(request.body);
+        CreateProfileRequestDtoScheme.parse(request.body);
 
       await this.createProfileUseCase.execute(profileDto);
       return response.sendStatus(200);

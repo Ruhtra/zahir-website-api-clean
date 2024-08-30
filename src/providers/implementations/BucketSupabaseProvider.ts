@@ -1,0 +1,33 @@
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { IBuketProvider } from "../IBucketProvider";
+
+const project_id = process.env.SUPABASE_PROJECT_ID;
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+const bucket = process.env.SUPABASE_BUCKET;
+
+//TO-DO: TRATAMENDO DE ERRO FEITO CORRETAMETNE
+export class BucketSupabaseProvider implements IBuketProvider {
+  async upload(fileKey: string, file: Express.Multer.File): Promise<any> {
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload("public/" + fileKey, file.buffer, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.mimetype,
+      });
+
+    if (error) throw new Error("Error in upload file");
+    return {
+      url: `https://${project_id}.supabase.co/storage/v1/object/public/${bucket}/public/${fileKey}`,
+    };
+  }
+  async delete(fileKey: string): Promise<any> {
+    const { error } = await supabase.storage
+      .from(bucket)
+      .remove([`public/${fileKey}`]);
+    if (error) throw new Error("Error in delete file");
+  }
+}
