@@ -23,9 +23,7 @@ export class BucketSupabaseProvider implements IBuketProvider {
     };
   }
   async delete(fileKey: string): Promise<any> {
-    const { error } = await supabase.storage
-      .from(bucket)
-      .remove([`public/${fileKey}`]);
+    const { error } = await supabase.storage.from(bucket).remove([fileKey]);
     if (error) throw new Error("Error in delete file");
   }
 }

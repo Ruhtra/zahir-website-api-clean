@@ -5,7 +5,6 @@ import path from "path";
 import { IPictureRepository } from "../../../repositories/IPictureRepository";
 import { Picture } from "../../../entities/Picture";
 
-//TO-DO: Fazer upsert no bucket pois no upsert do prisma não apaga a imagme anterior
 export class UploadFileUseCase
   implements IUseCase<UploadFileRequestDto, UploadFileResponseDto>
 {
