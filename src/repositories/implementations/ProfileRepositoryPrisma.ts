@@ -48,7 +48,7 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         : Picture.with({
             id: profile.picture.id,
             key: profile.picture.key,
-            path: profile.picture.name,
+            path: profile.picture.path,
             size: profile.picture.size,
             url: profile.picture.url,
           }),
@@ -121,7 +121,7 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           : Picture.with({
               id: p.picture.id,
               key: p.picture.key,
-              path: p.picture.name,
+              path: p.picture.path,
               size: p.picture.size,
               url: p.picture.url,
             }),
@@ -205,7 +205,7 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           picture: {
             create: {
               key: profile.picture.key,
-              name: profile.picture.path,
+              path: profile.picture.path,
               size: profile.picture.size,
               url: profile.picture.url,
             },

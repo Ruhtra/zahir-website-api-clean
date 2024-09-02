@@ -13,15 +13,6 @@ export class DeleteProfileController implements IController {
       await this.deleteProfileUseCase.execute(requestBody);
       return response.send(200);
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === "P2025") {
-          // P2025 is the error code for "Record to delete does not exist."
-          console.error(
-            `Profile with id ${request.query.idProfile} does not exist.`
-          );
-        }
-      }
-
       if (error instanceof ZodError) {
         console.log(error.errors);
         return response.status(400).json(error.errors);

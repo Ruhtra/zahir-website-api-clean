@@ -20,7 +20,7 @@ export class UploadFileUseCase
   }: UploadFileRequestDto): Promise<UploadFileResponseDto> {
     const fileExtension = path.extname(file.originalname);
     const fileKey = idProfile.concat(fileExtension);
-    const pathKey = path.join(fileExtension, fileKey);
+    const pathKey = path.join("public", fileKey);
 
     const { url } = await this.bucketProvider.upload(
       pathKey,
