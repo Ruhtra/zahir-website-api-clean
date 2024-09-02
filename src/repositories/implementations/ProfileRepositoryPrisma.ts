@@ -261,4 +261,82 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
       },
     });
   }
+  async update(id: string, profile: Profile): Promise<void> {
+    prismaClient.profile.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: profile.name,
+        informations: profile.informations,
+        movie: profile.movie,
+        resume: profile.resume,
+        createdAt: profile.createdAt,
+        address: !profile.address
+          ? {
+              delete: true,
+            }
+          : {
+              update: {
+                data: {
+                  cep: profile.address.cep,
+                  city: profile.address.city,
+                  complement: profile.address.complement,
+                  lat: profile.address.lat,
+                  lng: profile.address.lng,
+                  neighborhood: profile.address.neighborhood,
+                  number: profile.address.number,
+                  street: profile.address.street,
+                  uf: profile.address.uf,
+                },
+              },
+            },
+        picture: !profile.picture
+          ? { delete: true }
+          : {
+              update: {
+                data: {
+                  key: profile.picture.key,
+                  path: profile.picture.path,
+                  size: profile.picture.size,
+                  url: profile.picture.url,
+                },
+              },
+            },
+        promotion: !profile.promotion
+          ? { delete: true }
+          : {
+              update: {
+                title: profile.promotion.title,
+                description: profile.promotion.description,
+              },
+            },
+        telephone: !profile.telephone
+          ? {
+              delete: true,
+            }
+          : {
+              update: {
+                telephone: profile.telephone.telephone,
+                whatsapp: profile.telephone.whatsapp,
+              },
+            },
+        // Atualização das Categorias
+        categoryGroup: {
+          set: [], // Primeiro desconecta todos os relacionamentos existentes
+          connectOrCreate: profile.categoryGroup.map((cg) => ({
+            where: { name: cg.name },
+            create: { name: cg.name },
+          })),
+        },
+        category: {
+          set: [], // Primeiro desconecta todos os relacionamentos existentes
+          connectOrCreate: profile.category.map((c) => ({
+            where: { name: c.name },
+            create: { name: c.name },
+          })),
+        },
+      },
+    });
+  }
 }

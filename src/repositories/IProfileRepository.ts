@@ -8,5 +8,5 @@ export interface IProfileRepository {
 
   save: (profile: Profile) => Promise<void>;
   delete: (id: string) => Promise<void>;
-  // update: (id: ObjectId, Profile: Profile) => Promise<void>
+  update: (id: string, Profile: Profile) => Promise<void>;
 }
