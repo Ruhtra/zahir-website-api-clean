@@ -3,6 +3,7 @@ import { getAllprofileController } from "../useCases/ProfileUseCases/GetAllProfi
 import { getRecentProfileController } from "../useCases/ProfileUseCases/GetRecentProfile";
 import { getProfileController } from "../useCases/ProfileUseCases/GetProfile";
 import { createProfileController } from "../useCases/ProfileUseCases/CreateProfile";
+import { deleteProfileController } from "../useCases/ProfileUseCases/DeleteProfile";
 
 const router = express.Router();
 
@@ -13,5 +14,8 @@ router.get("/recent", (req, res) =>
 router.get("/get", (req, res) => getProfileController.handle(req, res));
 
 router.post("/create", (req, res) => createProfileController.handle(req, res));
+router.delete("/delete", (req, res) =>
+  deleteProfileController.handle(req, res)
+);
 
 export { router };

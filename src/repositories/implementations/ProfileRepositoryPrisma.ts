@@ -254,4 +254,11 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
       },
     });
   }
+  async delete(id: string): Promise<void> {
+    await prismaClient.profile.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
 }
