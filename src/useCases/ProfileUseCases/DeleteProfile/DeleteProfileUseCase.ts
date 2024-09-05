@@ -17,10 +17,11 @@ export class DeleteProfileUseCase
     const profile = await this.profileRepository.findById(idProfile);
     if (!profile) throw new Error("NotFound");
 
-    await Promise.all([
-      this.pictureRepostiroy.remove(profile.picture.id),
-      this.profileRepository.delete(idProfile),
-    ]);
-    await this.bucket.delete(profile.picture.path);
+    if (profile.picture) {
+      this.pictureRepostiroy.remove(profile.picture.id);
+      await this.bucket.delete(profile.picture.path);
+    }
+
+    await this.profileRepository.delete(idProfile);
   }
 }

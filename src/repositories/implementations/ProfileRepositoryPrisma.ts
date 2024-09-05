@@ -260,9 +260,32 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         id: id,
       },
     });
+
+    await remoedUnsuedCategory();
+    await remoedUnsuedCategoryGroup();
   }
   async update(id: string, profile: Profile): Promise<void> {
-    prismaClient.profile.update({
+    const [
+      existingAddress,
+      existingPicture,
+      existingPromotion,
+      existingTelephone,
+    ] = await Promise.all([
+      prismaClient.address.findUnique({
+        where: { profileId: id },
+      }),
+      prismaClient.picture.findUnique({
+        where: { profileId: id },
+      }),
+      prismaClient.promotion.findUnique({
+        where: { profileId: id },
+      }),
+      prismaClient.telephone.findUnique({
+        where: { profileId: id },
+      }),
+    ]);
+
+    await prismaClient.profile.update({
       where: {
         id: id,
       },
@@ -271,14 +294,82 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         informations: profile.informations,
         movie: profile.movie,
         resume: profile.resume,
-        createdAt: profile.createdAt,
-        address: !profile.address
-          ? {
-              delete: true,
-            }
+        telephone: !profile.telephone
+          ? existingTelephone
+            ? { delete: true }
+            : undefined
           : {
-              update: {
-                data: {
+              upsert: {
+                create: {
+                  telephone: profile.telephone.telephone,
+                  whatsapp: profile.telephone.whatsapp,
+                },
+                update: {
+                  telephone: profile.telephone.telephone,
+                  whatsapp: profile.telephone.whatsapp,
+                },
+              },
+            },
+        promotion: !profile.promotion
+          ? existingPromotion
+            ? {
+                delete: true,
+              }
+            : undefined
+          : {
+              upsert: {
+                create: {
+                  title: profile.promotion.title,
+                  description: profile.promotion.description,
+                },
+                update: {
+                  title: profile.promotion.title,
+                  description: profile.promotion.description,
+                },
+              },
+            },
+        picture: !profile.picture
+          ? existingPicture
+            ? {
+                delete: true,
+              }
+            : undefined
+          : {
+              upsert: {
+                create: {
+                  key: profile.picture.key,
+                  path: profile.picture.path,
+                  size: profile.picture.size,
+                  url: profile.picture.url,
+                },
+                update: {
+                  key: profile.picture.key,
+                  path: profile.picture.path,
+                  size: profile.picture.size,
+                  url: profile.picture.url,
+                },
+              },
+            },
+        address: !profile.address
+          ? existingAddress
+            ? {
+                delete: true,
+              }
+            : undefined
+          : {
+              upsert: {
+                update: {
+                  cep: profile.address.cep,
+                  city: profile.address.city,
+                  complement: profile.address.complement,
+                  lat: profile.address.lat,
+                  lng: profile.address.lng,
+                  neighborhood: profile.address.neighborhood,
+                  number: profile.address.number,
+                  street: profile.address.street,
+                  uf: profile.address.uf,
+                },
+                create: {
                   cep: profile.address.cep,
                   city: profile.address.city,
                   complement: profile.address.complement,
@@ -291,44 +382,6 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
                 },
               },
             },
-        picture: !profile.picture
-          ? { delete: true }
-          : {
-              update: {
-                data: {
-                  key: profile.picture.key,
-                  path: profile.picture.path,
-                  size: profile.picture.size,
-                  url: profile.picture.url,
-                },
-              },
-            },
-        promotion: !profile.promotion
-          ? { delete: true }
-          : {
-              update: {
-                title: profile.promotion.title,
-                description: profile.promotion.description,
-              },
-            },
-        telephone: !profile.telephone
-          ? {
-              delete: true,
-            }
-          : {
-              update: {
-                telephone: profile.telephone.telephone,
-                whatsapp: profile.telephone.whatsapp,
-              },
-            },
-        // Atualização das Categorias
-        categoryGroup: {
-          set: [], // Primeiro desconecta todos os relacionamentos existentes
-          connectOrCreate: profile.categoryGroup.map((cg) => ({
-            where: { name: cg.name },
-            create: { name: cg.name },
-          })),
-        },
         category: {
           set: [], // Primeiro desconecta todos os relacionamentos existentes
           connectOrCreate: profile.category.map((c) => ({
@@ -336,7 +389,55 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
             create: { name: c.name },
           })),
         },
+        categoryGroup: {
+          set: [], // Primeiro desconecta todos os relacionamentos existentes
+          connectOrCreate: profile.categoryGroup.map((c) => ({
+            where: { name: c.name },
+            create: { name: c.name },
+          })),
+        },
       },
     });
+
+    await remoedUnsuedCategory();
+    await remoedUnsuedCategoryGroup();
   }
+}
+
+async function remoedUnsuedCategory() {
+  const categoriesWithoutProfiles = await prismaClient.category.findMany({
+    where: {
+      profile: {
+        none: {}, // Busca categorias que não têm nenhum perfil relacionado
+      },
+    },
+    select: { id: true },
+  });
+
+  await prismaClient.category.deleteMany({
+    where: {
+      id: {
+        in: categoriesWithoutProfiles.map((category) => category.id),
+      },
+    },
+  });
+}
+
+async function remoedUnsuedCategoryGroup() {
+  const categoriesWithoutProfiles = await prismaClient.categoryGroup.findMany({
+    where: {
+      profile: {
+        none: {}, // Busca categorias que não têm nenhum perfil relacionado
+      },
+    },
+    select: { id: true },
+  });
+
+  await prismaClient.categoryGroup.deleteMany({
+    where: {
+      id: {
+        in: categoriesWithoutProfiles.map((category) => category.id),
+      },
+    },
+  });
 }

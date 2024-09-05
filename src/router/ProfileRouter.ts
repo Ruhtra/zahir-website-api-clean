@@ -4,6 +4,7 @@ import { getRecentProfileController } from "../useCases/ProfileUseCases/GetRecen
 import { getProfileController } from "../useCases/ProfileUseCases/GetProfile";
 import { createProfileController } from "../useCases/ProfileUseCases/CreateProfile";
 import { deleteProfileController } from "../useCases/ProfileUseCases/DeleteProfile";
+import { updateProfileController } from "../useCases/ProfileUseCases/UpdateProfile";
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.post("/create", (req, res) => createProfileController.handle(req, res));
 router.delete("/delete", (req, res) =>
   deleteProfileController.handle(req, res)
 );
+router.put("/update", (req, res) => updateProfileController.handle(req, res));
 
 export { router };

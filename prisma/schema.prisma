@@ -59,7 +59,7 @@ model Address {
     street       String
     uf           String
 
-    profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
     profileId String  @unique
 
     @@map("address")
@@ -72,7 +72,7 @@ model Picture {
     size Int
     url  String
 
-    profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
     profileId String  @unique
 
     createdAt DateTime @default(now()) @db.Date
@@ -104,7 +104,7 @@ model Promotion {
     title       String
     description String?
 
-    profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
     profileId String  @unique
 
     @@map("promotion")
@@ -115,7 +115,7 @@ model Telephone {
     telephone String[]
     whatsapp  String[]
 
-    profile   Profile @relation(fields: [profileId], references: [id])
+    profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
     profileId String  @unique
 
     @@map("telephone")
@@ -132,7 +132,7 @@ model Profile {
     address           Address?
     picture           Picture?
     promotion         Promotion?
-    telephone         Telephone?
+    telephone         Telephone?   
     categoryGroup     CategoryGroup[]    @relation("CategoryGroup")
     category          Category[]         @relation("Category")
     homePagePromotion HomePagePromotion?
