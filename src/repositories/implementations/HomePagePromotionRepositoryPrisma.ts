@@ -1,4 +1,5 @@
 import { HomePagePromotion } from "../../entities/HomePagePromotion";
+import { Picture } from "../../entities/Picture";
 import { Profile } from "../../entities/Profile";
 import { prismaClient } from "../../prismaClient";
 import { IHomePagePromotionRepository } from "../IHomePagePromotionRepository";
@@ -6,6 +7,21 @@ import { IHomePagePromotionRepository } from "../IHomePagePromotionRepository";
 export class HomePagePromotionRepositoryPrisma
   implements IHomePagePromotionRepository
 {
+  async create(hpp: HomePagePromotion): Promise<void> {
+    await prismaClient.homePagePromotion.create({
+      data: {
+        order: hpp.order,
+        profileId: hpp.profileId,
+      },
+    });
+  }
+  async remove(profileId: string): Promise<void> {
+    await prismaClient.homePagePromotion.delete({
+      where: {
+        profileId: profileId,
+      },
+    });
+  }
   async all(): Promise<HomePagePromotion[]> {
     const homePagePromotions = await prismaClient.homePagePromotion.findMany({
       include: {
@@ -46,13 +62,13 @@ export class HomePagePromotionRepositoryPrisma
               },
           picture: !hpp.profile.picture
             ? null
-            : {
+            : Picture.with({
                 id: hpp.profile.picture.id,
                 key: hpp.profile.picture.key,
-                path: hpp.profile.picture.name,
+                path: hpp.profile.picture.path,
                 size: hpp.profile.picture.size,
                 url: hpp.profile.picture.url,
-              },
+              }),
           promotion: !hpp.profile.promotion
             ? null
             : {
