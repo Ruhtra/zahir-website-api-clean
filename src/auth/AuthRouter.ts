@@ -27,7 +27,7 @@ router.get(
         email: req.user.email,
       },
       env.JWT_SECRET,
-      { expiresIn: "12h" } // Correção: 'expiresIn' deve estar fora do payload
+      { expiresIn: "12h" }
     );
 
     res.cookie("token", token, {
@@ -38,7 +38,7 @@ router.get(
       secure: true,
       sameSite: "none",
     });
-    res.redirect(`${env.URL_FRONTEND}/login/success`);
+    res.redirect(`${env.URL_FRONTEND}/?token=` + token);
   }
 );
 

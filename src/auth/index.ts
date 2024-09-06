@@ -1,7 +1,7 @@
 import passport from "passport";
 import { googleStrategy } from "./Strategys/GoogleStrategy";
 import { JWTStrategy } from "./Strategys/jwtStrategy";
-import { router } from "./AuthRoute";
+import { router } from "./AuthRouter";
 import { Application } from "express";
 
 const Auth = (app: Application) => {
