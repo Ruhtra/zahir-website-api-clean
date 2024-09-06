@@ -1,42 +1,49 @@
-import express from "express";
+import { response, Router } from "express";
 import passport from "passport";
-import { ensureAuthenticated } from "./authMiddleware";
+import jwt from "jsonwebtoken";
 import { env } from "../env";
+import { requireJwtAuth } from "./RequiredJwtAuth";
 
-const router = express.Router();
+const router = Router();
 
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
+  passport.authenticate("google", {
+    failureRedirect: "/",
+    session: false,
+  }),
+  async (req, res) => {
+    const token = jwt.sign(
+      {
+        id: req.user.id,
+        provider: req.user.provider,
+        email: req.user.email,
+      },
+      env.JWT_SECRET,
+      { expiresIn: "12h" } // Correção: 'expiresIn' deve estar fora do payload
+    );
+
+    res.cookie("token", token, {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      domain: env.DOMAIN,
+      httpOnly: true,
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    });
     res.redirect(`${env.URL_FRONTEND}/login/success`);
   }
 );
 
-router.post("/logout", (req, res) => {
-  if (req.isAuthenticated()) {
-    req.logout((err) => {
-      if (err)
-        return res.status(500).json({ message: "Logout failed", error: err });
-      return res.status(200).json({ message: "Logged out successfully" });
-    });
-  } else {
-    res.status(401).json({ message: "Not authenticated" });
-  }
-});
-
-router.get("/me", ensureAuthenticated, (req, res) => {
-  try {
-    if (!req.user) throw new Error("User not founded");
-    return res.json(req.user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+router.get("/me", requireJwtAuth, (req, res) => {
+  return res.status(200).json(req.user);
 });
 
 export { router };

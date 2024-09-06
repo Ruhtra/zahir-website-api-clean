@@ -17,24 +17,26 @@ model Session {
     updatedAt DateTime @updatedAt
 }
 
-// enum Role {
-//     user
-//     admin
-// }
+enum Role {
+    user
+    admin
+}
 
 model GoogleUser {
     id       String  @id @default(uuid())
+    provider String
+    googleId String  @unique
+    username String
     email    String  @unique
     name     String?
-    picture  String
-    googleId String  @unique
+    avatar  String
 
-    // role Role @default(user)
+    role Role @default(user)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@map("google_user")
+    @@map("google_user_novo")
 }
 
 model HomePagePromotion {
