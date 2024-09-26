@@ -36,6 +36,7 @@ export class CreateProfileUseCase
       }),
       ...(request.promotion && {
         promotion: {
+          active: request.promotion.active,
           title: request.promotion.title,
           description: request.promotion.description,
         },

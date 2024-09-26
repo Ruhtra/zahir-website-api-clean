@@ -56,6 +56,7 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
         ? null
         : {
             id: profile.promotion.id,
+            active: profile.promotion.active,
             title: profile.promotion.title,
             description: profile.promotion.description,
           },
@@ -129,6 +130,7 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           ? null
           : {
               id: p.promotion.id,
+              active: p.promotion.active,
               title: p.promotion.title,
               description: p.promotion.description,
             },
@@ -215,6 +217,7 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
           promotion: {
             create: {
               title: profile.promotion.title,
+              active: profile.promotion.active,
               description: profile.promotion.description,
             },
           },
@@ -320,10 +323,12 @@ export class ProfileRepositoryPrisma implements IProfileRepository {
               upsert: {
                 create: {
                   title: profile.promotion.title,
+                  active: profile.promotion.active,
                   description: profile.promotion.description,
                 },
                 update: {
                   title: profile.promotion.title,
+                  active: profile.promotion.active,
                   description: profile.promotion.description,
                 },
               },

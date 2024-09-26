@@ -27,6 +27,7 @@ export type ProfileProps = {
   promotion?: {
     id: string;
     title: string;
+    active: boolean;
     description?: string;
   };
   telephone?: {
@@ -99,6 +100,7 @@ export class Profile {
         promotion: {
           id: undefined,
           title: props.promotion.title,
+          active: props.promotion.active,
           description: props.promotion.description,
         },
       }),

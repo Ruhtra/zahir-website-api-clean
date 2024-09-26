@@ -40,6 +40,7 @@ export class UpdateProfileUseCase
       ...(request.promotion && {
         promotion: {
           title: request.promotion.title,
+          active: request.promotion.active,
           description: request.promotion.description,
         },
       }),

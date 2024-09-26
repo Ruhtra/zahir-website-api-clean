@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { boolean, z } from "zod";
 
 export const CreateProfileRequestDtoScheme = z
   .object({
@@ -34,11 +34,20 @@ export const CreateProfileRequestDtoScheme = z
       .optional(),
     promotion: z
       .object({
-        title: z.string().max(150),
+        active: z.boolean(),
+        title: z.string().max(150).optional(),
         description: z.string().max(500).optional(),
       })
       .strict()
-      .optional(),
+      .refine(
+        (data) => {
+          if (data.active) return !!data.title && data.title.trim().length > 0;
+          return true;
+        },
+        {
+          path: ["title"],
+        }
+      ),
     telephone: z
       .object({
         telephone: z.array(z.string().length(11)),

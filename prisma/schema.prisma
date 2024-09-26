@@ -103,7 +103,8 @@ model CategoryGroup {
 
 model Promotion {
     id          String  @id @default(uuid())
-    title       String
+    active      Boolean
+    title       String?
     description String?
 
     profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
